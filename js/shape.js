@@ -34,6 +34,11 @@ define(
                     return prefixedName;
                 };
 
+                var miniMD = function(str) {
+                  return str.replace(/{{/g, "<span class='conformance'>").replace(/}}/g, "</span>")
+                     .replace(/`([^`]+)`/g, "<code>$1</code>");
+                };
+
                 var setDefaults = function(prop) {
                     var propDefaults = {
                         occurs:   {long: "http://open-services.net/ns/core#Zero-or-many", short: "Zero-or-many"},
@@ -63,7 +68,7 @@ define(
                             var r = /#.*$/.exec(o);
                             if (r && r.length > 0) o = r[0].substring(1);
                         }
-                    return o
+                    return o;
                     }
 
                     $.each(triples || [], function(i, it) {
@@ -172,12 +177,18 @@ define(
                    conf.typeURI = typeURI[0].object;
                    conf.name = /[#/][^#/]*$/.exec(conf.typeURI)[0].substring(1);
                 }
+                else
+                {
+                    conf.name = conf.typeURI = "Common Properties";
+                }
 
                 var title = store.find(shapeSubject, dcTitle, null);
-                conf.title = N3.Util.getLiteralValue(title[0].object);
+                conf.title = miniMD(N3.Util.getLiteralValue(title[0].object));
 
                 var desc = store.find(shapeSubject, dcDescription, null);
-                if (desc.length > 0) conf.description = N3.Util.getLiteralValue(desc[0].object);
+                if (desc.length > 0) {
+                  conf.description = miniMD(N3.Util.getLiteralValue(desc[0].object));
+                }
 
                 var props = store.find(shapeSubject, oslcProp, null);
                 conf.props = props;
@@ -212,6 +223,9 @@ define(
                         it.prefixedName = getPrefixedName(it.propURI);
                     if (oslcLitTypes[it.valType])
                         it.rep = "N/A";
+                    if (it.description) {
+                      it.description = miniMD(it.description);
+                    }
                 });
                 props.sort(function(a, b) { return a.prefixedName.localeCompare(b.prefixedName); });
 
