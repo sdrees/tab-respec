@@ -180,7 +180,7 @@
     <span class='citationTitle'>{{title}}</span>.
     Edited by {{editorsHTML}}.
     {{publishHumanDate}}.
-    {{#if prependOASIS}}OASIS {{/if}} {{textStatus}} {{revision}}.
+    {{#unless isStd}}OASIS {{/unless}} {{textStatus}}{{#unless isStd}} {{revision}}{{/unless}}.
     {{#if thisVersion}} <a class='u-url' href='{{thisVersion}}'>{{thisVersion}}</a>.{{/if}}
     {{#if latestVersion}} Latest stage: <a href='{{latestVersion}}'>{{latestVersion}}</a>.{{/if}}
     </p>
@@ -199,12 +199,6 @@
         This document is also available in this non-normative format:
       {{/if}}
       {{{alternatesHTML}}}
-    </p>
-  {{/if}}
-  {{#if isStd}}
-    <p>
-      The English version of this specification is the only normative version. Non-normative
-      translations may also be available.
     </p>
   {{/if}}
 </div>

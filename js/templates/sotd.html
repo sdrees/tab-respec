@@ -15,7 +15,7 @@
     {{{sotdCustomParagraph}}}
   {{else}}
     <p>
-      This document was last revised or approved by the <a href='{{wgURI}}'>{{wg}}</a> on the above date.
+      This document was last revised or approved by the {{#if isStd}}membership of OASIS{{else}}<a href='{{wgURI}}'>{{wg}}</a>{{/if}} on the above date.
       The level of approval is also listed above.
       Check the “Latest stage” location noted above for possible later revisions of this document.
       Any other numbered Versions and other technical work produced by the Open Project are listed at
@@ -27,6 +27,10 @@
       <a href='mailto:{{wgPublicList}}'>{{wgPublicList}}</a>.
     </p>
     <p>
+      {{#if isStd}}
+        The English version of this specification is the only normative version. Non-normative
+        translations may also be available.
+    {{/if}}  
       Note that any machine-readable content
       (<a href="https://www.oasis-open.org/policies-guidelines/tc-process#wpComponentsCompLang">Computer Language Definitions</a>)
       declared Normative for this Work Product is provided in separate plain text files.

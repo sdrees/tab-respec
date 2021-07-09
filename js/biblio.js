@@ -7,6 +7,8 @@
 define(
     [],
     function () {
+        var specRef = "https://specref.herokuapp.com/bibrefs?refs="; // was "https://api.specref.org/bibrefs?refs="
+
         var getRefKeys = function (conf) {
             var informs = conf.informativeReferences
             ,   norms = conf.normativeReferences
@@ -40,7 +42,6 @@ define(
         ,   "WD":       "Working Draft"
         ,   "PSD":      "Project Specification Draft"
         ,   "PS":       "Project Specification"
-        ,   "COS":      "Candidate OASIS Standard"
         ,   "OS":       "OASIS Standard"
         ,   "Errata":   "Approved Errata"
         ,   "PND":      "Project Note Draft"
@@ -57,7 +58,14 @@ define(
             }
             if (ref.href) output += '<a href="' + ref.href + '"><cite>' + ref.title + "</cite></a>. ";
             else output += '<cite>' + ref.title + '</cite>. ';
-            if (ref.date) output += ref.date + ". ";
+            if (ref.date)  {
+                if (ref.publisher) output += ref.publisher + ", ";
+                output += ref.date + ". ";
+            } else if (ref.year) {
+                if (ref.publisher) output += ref.publisher + ", ";
+                output += ref.year + ". ";
+            }
+            else if (ref.publisher) output += ref.publisher + ". ";
             if (ref.status) output += (REF_STATUSES[ref.status] || ref.status) + ". ";
             if (ref.href) output += 'URL: <a href="' + ref.href + '">' + ref.href + "</a>";
             return output;
@@ -162,7 +170,7 @@ define(
                                 .concat(refs.informativeReferences)
                                 .concat(localAliases);
                 if (refs.length) {
-                    var url = "https://api.specref.org/bibrefs?refs=" + refs.join(",");
+                    var url = specRef + refs.join(",");
                     $.ajax({
                         dataType:   "json"
                     ,   url:        url
